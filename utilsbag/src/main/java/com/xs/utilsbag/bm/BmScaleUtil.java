@@ -1,8 +1,20 @@
 package com.xs.utilsbag.bm;
 
+import android.content.Context;
 import android.content.res.Resources;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.Matrix;
+
+import com.xs.utilsbag.file.FileUtils;
+import com.xs.utilsbag.file.IOUtils;
+
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
 
 /**
  * @version V1.0 <图片缩放工具类>
@@ -13,6 +25,7 @@ import android.graphics.BitmapFactory;
 public class BmScaleUtil {
 
     /** Need to know
+
      1.int inSampleSize
      If set to a value > 1, requests the decoder to subsample the original image, returning a smaller image to
      save memory. The sample size is the number of pixels in either dimension that correspond to a single pixel
@@ -23,6 +36,7 @@ public class BmScaleUtil {
      2.boolean inJustDecodeBounds
      If set to true, the decoder will return null (no bitmap), but the out... fields will still be set, allowing
      the caller to query the bitmap without having to allocate the memory for its pixels.
+
      **/
 
     /**
@@ -59,7 +73,7 @@ public class BmScaleUtil {
     }
 
     /**
-     * 缩放图片 from 资源文件
+     * 按比例缩放图片 from 资源文件
      * @param res
      * @param resId
      * @param reqWidth
@@ -79,7 +93,7 @@ public class BmScaleUtil {
     }
 
     /**
-     * 缩放图片 from SD File文件
+     * 按比例缩放图片 from SD File文件
      * @param pathName
      * @param reqWidth
      * @param reqHeight
@@ -113,15 +127,62 @@ public class BmScaleUtil {
     }
 
     /**
-     * 计算图片占用内存大小 Mb
-     * @param bitmap
+     * 按质量压缩图片 并转化为File
+     * @param image
+     * @param context
      * @return
      */
-    public static int calculateBitmapSizeMb(Bitmap bitmap) {
-        final int bSize = bitmap.getByteCount();//byte
-        final int kSize = bSize / 1024;//Kb
-        final int mSize = kSize / 1024;//Mb
-        return mSize;
+    public static File compressImageToFile(Bitmap image, Context context)
+    {
+        File file = new File(FileUtils.getCacheDir(context),"yasuo.png");
+        FileOutputStream fileOutputStream = null;
+        try {
+            fileOutputStream = new FileOutputStream(file);
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        }
+
+        ByteArrayOutputStream baos = new ByteArrayOutputStream();
+        image.compress(Bitmap.CompressFormat.PNG, 100, baos);// 质量压缩方法，这里100表示不压缩，把压缩后的数据存放到baos中
+        int options = 100;
+        while (baos.toByteArray().length / 1024 > 100)
+        { // 循环判断如果压缩后图片是否大于100kb,大于继续压缩
+            baos.reset();// 重置baos即清空baos
+            image.compress(Bitmap.CompressFormat.PNG, options, baos);// 这里压缩options%，把压缩后的数据存放到baos中
+            if (options <= 0 )
+                break;
+            options -= 10;// 每次都减少10
+            options = options <= 0 ? 0 : options;
+        }
+//        ByteArrayInputStream isBm = new ByteArrayInputStream(baos.toByteArray());// 把压缩后的数据baos存放到ByteArrayInputStream中
+//        Bitmap bitmap = BitmapFactory.decodeStream(isBm, null, null);// 把ByteArrayInputStream数据生成图片
+//        return bitmap;
+        try {
+            baos.writeTo(fileOutputStream);//把压缩后的数据baos存放到FileOutputStream中
+            IOUtils.close(baos);
+            fileOutputStream.flush();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        return file;
     }
+
+
+    /**
+     * 放大或缩小图片
+     * @param bitmap 源图片
+     * @param ratio 放大或缩小的倍数，大于1表示放大，小于1表示缩小
+     * @return Bitmap
+     */
+    public static Bitmap zoom(Bitmap bitmap, float ratio) {
+        if (ratio < 0f) {return bitmap;}
+        Matrix matrix = new Matrix();
+        matrix.postScale(ratio, ratio);
+        return Bitmap.createBitmap(bitmap, 0, 0, bitmap.getWidth(), bitmap.getHeight(), matrix, true);
+    }
+
+
+
 
 }
