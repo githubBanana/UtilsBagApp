@@ -5,6 +5,7 @@ import android.content.res.Resources;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Matrix;
+import android.util.Log;
 
 import com.xs.utilsbag.file.FileUtils;
 import com.xs.utilsbag.file.IOUtils;
@@ -23,7 +24,7 @@ import java.io.IOException;
  * @email Xs.lin@foxmail.com
  */
 public class BmScaleUtil {
-
+    private static final String TAG = BmScaleUtil.class.getSimpleName();
     /** Need to know
 
      1.int inSampleSize
@@ -47,7 +48,7 @@ public class BmScaleUtil {
      * @return
      */
     public static int calculateInSampleSize(BitmapFactory.Options options,
-                                             int reqWidth, int reqHeight) {
+                                            int reqWidth, int reqHeight) {
         final int height = options.outHeight;
         final int width = options.outWidth;
         int inSampleSize = 1;
@@ -100,7 +101,7 @@ public class BmScaleUtil {
      * @return
      */
     public static Bitmap decodeSampledBitmapFromFile(String pathName,
-                                                   int reqWidth, int reqHeight) {
+                                                     int reqWidth, int reqHeight) {
         final BitmapFactory.Options options = new BitmapFactory.Options();
         options.inJustDecodeBounds = true;
         BitmapFactory.decodeFile(pathName, options);
@@ -113,59 +114,49 @@ public class BmScaleUtil {
     /**
      * 缩放图片 指定缩放比例
      * @param pathName
-     * @param inSampleSize
+     * @param inSampleSize 裁剪比例
+     * @param limit 裁剪界限
      * @return
      */
-    public static Bitmap decodeSampledBitmap(String pathName,int inSampleSize) {
+    public static Bitmap decodeSampledBitmap(String pathName,int inSampleSize,int limit) {
         final BitmapFactory.Options options = new BitmapFactory.Options();
         options.inJustDecodeBounds = true;
         BitmapFactory.decodeFile(pathName, options);
-        options.inSampleSize = inSampleSize;
+        Log.e(TAG, "decodeSampledBitmap: 尺寸裁剪前 --> height:"+options.outHeight+" width:"+options.outWidth );
+        if (options.outHeight >= limit || options.outWidth >= limit)
+            options.inSampleSize = inSampleSize;
+        else
+            options.inSampleSize = 1;
         options.inJustDecodeBounds = false;
         Bitmap src = BitmapFactory.decodeFile(pathName, options);
+        Log.e(TAG, "decodeSampledBitmap: 尺寸裁剪后 --> height:"+options.outHeight+" width:"+options.outWidth );
         return src;
     }
 
+
     /**
-     * 按质量压缩图片 并转化为File
+     * 缩放图片质量
      * @param image
-     * @param context
      * @return
      */
-    public static File compressImageToFile(Bitmap image, Context context)
+    public static Bitmap compressImageToBitmap(Bitmap image)
     {
-        File file = new File(FileUtils.getCacheDir(context),"yasuo.png");
-        FileOutputStream fileOutputStream = null;
-        try {
-            fileOutputStream = new FileOutputStream(file);
-        } catch (FileNotFoundException e) {
-            e.printStackTrace();
-        }
-
         ByteArrayOutputStream baos = new ByteArrayOutputStream();
-        image.compress(Bitmap.CompressFormat.PNG, 100, baos);// 质量压缩方法，这里100表示不压缩，把压缩后的数据存放到baos中
+        image.compress(Bitmap.CompressFormat.JPEG, 100, baos);// 质量压缩方法，这里100表示不压缩，把压缩后的数据存放到baos中
         int options = 100;
         while (baos.toByteArray().length / 1024 > 100)
         { // 循环判断如果压缩后图片是否大于100kb,大于继续压缩
+            Log.e(TAG, "compressImageToBitmap: "+baos.toByteArray().length/(float)1024 );
             baos.reset();// 重置baos即清空baos
-            image.compress(Bitmap.CompressFormat.PNG, options, baos);// 这里压缩options%，把压缩后的数据存放到baos中
+            image.compress(Bitmap.CompressFormat.JPEG, options, baos);// 这里压缩options%，把压缩后的数据存放到baos中
             if (options <= 0 )
                 break;
             options -= 10;// 每次都减少10
             options = options <= 0 ? 0 : options;
         }
-//        ByteArrayInputStream isBm = new ByteArrayInputStream(baos.toByteArray());// 把压缩后的数据baos存放到ByteArrayInputStream中
-//        Bitmap bitmap = BitmapFactory.decodeStream(isBm, null, null);// 把ByteArrayInputStream数据生成图片
-//        return bitmap;
-        try {
-            baos.writeTo(fileOutputStream);//把压缩后的数据baos存放到FileOutputStream中
-            IOUtils.close(baos);
-            fileOutputStream.flush();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-
-        return file;
+        ByteArrayInputStream isBm = new ByteArrayInputStream(baos.toByteArray());// 把压缩后的数据baos存放到ByteArrayInputStream中
+        Bitmap bitmap = BitmapFactory.decodeStream(isBm, null, null);// 把ByteArrayInputStream数据生成图片
+        return bitmap;
     }
 
 
@@ -182,6 +173,94 @@ public class BmScaleUtil {
         return Bitmap.createBitmap(bitmap, 0, 0, bitmap.getWidth(), bitmap.getHeight(), matrix, true);
     }
 
+
+    /**
+     * 先裁剪再压缩
+     * @param path
+     * @param cutInSampleSize
+     * @param cutLimit
+     * @param compressLimitMb
+     * @param context
+     * @return
+     */
+    public static File cutAndCompress(String path,int cutInSampleSize,int cutLimit,float compressLimitMb, Context context)
+    {
+        /*----裁剪---*/
+        final String cacheFileName = "upload_cache.png";
+        boolean cut = false;
+        final BitmapFactory.Options options = new BitmapFactory.Options();
+        options.inJustDecodeBounds = true;
+        BitmapFactory.decodeFile(path, options);
+        Log.e(TAG, "decodeSampledBitmap: 尺寸裁剪前 --> height:"+options.outHeight+" width:"+options.outWidth );
+        if (options.outHeight >= cutLimit || options.outWidth >= cutLimit) {
+            options.inSampleSize = cutInSampleSize;
+            cut = true;
+        }
+        else {
+            options.inSampleSize = 1;
+            cut = false;
+        }
+        options.inJustDecodeBounds = false;
+        Bitmap src = BitmapFactory.decodeFile(path, options);
+        Log.e(TAG, "decodeSampledBitmap: 尺寸裁剪后 --> height:"+options.outHeight+" width:"+options.outWidth );
+
+        /*----压缩---*/
+        ByteArrayOutputStream baos = new ByteArrayOutputStream();
+        src.compress(Bitmap.CompressFormat.JPEG, 100, baos);// 质量压缩方法，这里100表示不压缩，把压缩后的数据存放到baos中
+        if (baos.toByteArray().length / (float)1024 > (compressLimitMb * 1024)) {
+            Log.e(TAG, "compressImageToFile: ing "+baos.toByteArray().length/(float)(1024*1024) );
+            baos.reset();
+            src.compress(Bitmap.CompressFormat.JPEG,70,baos);//30 0.039826393 70 0.07471275 90 0.15085125  99 0.46049404
+            Log.e(TAG, "compressImageToFile: ing2 "+baos.toByteArray().length/(float)(1024*1024) );
+            File file = new File(FileUtils.getCacheDir(context),cacheFileName);
+            FileOutputStream fileOutputStream = null;
+            try {
+                fileOutputStream = new FileOutputStream(file);
+            } catch (FileNotFoundException e) {
+                e.printStackTrace();
+            }
+            try {
+                baos.writeTo(fileOutputStream);//把压缩后的数据baos存放到FileOutputStream中
+                IOUtils.close(baos);
+                fileOutputStream.flush();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+            Log.e(TAG, "裁剪+压缩后: "+(file.length() /(float)(1024*1024)));
+            return file;
+
+        } else {
+            if (cut) {//已裁剪 无压缩
+                File photoFile = new File(FileUtils.getCacheDir(context), cacheFileName);
+                FileOutputStream out = null;
+                try {
+                    out = new FileOutputStream(photoFile);
+                    if (src != null) {
+                        if (src.compress(Bitmap.CompressFormat.JPEG, 100, out)) {
+                            out.flush();
+                        }
+                    }
+                } catch (FileNotFoundException e) {
+                    photoFile.delete();
+                    e.printStackTrace();
+                } catch (IOException e) {
+                    photoFile.delete();
+                    e.printStackTrace();
+                } finally {
+                    try {
+                        out.close();
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                }
+                return photoFile;
+            } else {//无裁剪无压缩
+                return new File(path);
+            }
+        }
+
+
+    }
 
 
 
