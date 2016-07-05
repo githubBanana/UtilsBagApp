@@ -10,9 +10,11 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
+import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.io.PrintWriter;
 import java.io.RandomAccessFile;
 import java.util.HashMap;
 import java.util.Map;
@@ -30,6 +32,7 @@ public class FileUtils {
 	public static final String DOWNLOAD_DIR = "download";
 	public static final String CACHE_DIR = "cache";
 	public static final String ICON_DIR = "icon";
+	public static final String LOG_DIR = "log";
 
 	/**
 	 * 判断SD卡是否挂载
@@ -53,6 +56,14 @@ public class FileUtils {
 	}
 
 	/**
+	 * 获取log目录
+	 * @param context
+	 * @return
+     */
+	public static String getLogDir(Context context) {
+		return getDir(LOG_DIR,context);
+	}
+	/**
 	 * 获取缓存目录
 	 */
 	public static String getCacheDir(Context context) {
@@ -69,7 +80,7 @@ public class FileUtils {
 	/**
 	 * 获取应用目录，当SD卡存在时，获取SD卡上的目录，当SD卡不存在时，获取应用的cache目录
 	 */
-	public static String getDir(String name,Context context) {
+	private static String getDir(String name,Context context) {
 		StringBuilder sb = new StringBuilder();
 		if (isSDCardAvailable())
 		{
@@ -306,6 +317,24 @@ public class FileUtils {
 	 */
 	public static boolean writeFile(String content, String path, boolean append) {
 		return writeFile(content.getBytes(), path, append);
+	}
+
+	/**
+	 * string to file
+	 * @param fileName
+	 * @param info
+	 * @param context
+     */
+	public static void writeStringToFile(String fileName,String info,Context context) {
+		String filePath = getLogDir(context)+fileName+".log";
+		try {
+			PrintWriter pw = new PrintWriter(new FileWriter(filePath));
+			pw.println(info);
+			IOUtils.close(pw);
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 	}
 
 	/**

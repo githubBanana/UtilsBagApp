@@ -1,13 +1,18 @@
-package com.xs.utilsbagapp;
+package com.xs.utilsbagapp.activity;
 
 
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.xs.utilsbag.phone.ScreenUtil;
+import com.xs.utilsbagapp.R;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class TestActivity extends AppCompatActivity {
 

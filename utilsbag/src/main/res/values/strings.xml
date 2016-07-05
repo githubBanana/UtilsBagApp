@@ -1,3 +1,10 @@
 <resources>
     <string name="app_name">UtilsBag</string>
+    <string name="unknow_version">版本号未知</string>
+    <string name="hardware_info">硬件信息:</string>
+    <string name="error_info">报错信息:</string>
+    <string name="software_version">软件版本:</string>
+    <string name="device_model">设备型号:</string>
+    <string name="device_sdk_version">设备SDK版本:</string>
+    <string name="device_system_version">设备的系统版本:</string>
 </resources>
