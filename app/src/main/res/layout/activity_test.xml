@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
@@ -7,24 +7,37 @@
     android:paddingLeft="@dimen/activity_horizontal_margin"
     android:paddingRight="@dimen/activity_horizontal_margin"
     android:paddingTop="@dimen/activity_vertical_margin"
+    android:orientation="vertical"
     android:gravity="center_horizontal"
-    tools:context=".MainActivity">
+    tools:context=".activity.TestActivity">
 
-    <ImageView
-        android:id="@+id/btn_touch"
-        android:layout_width="100dp"
-        android:layout_height="50dp"
-        android:textAllCaps="false"
-        android:gravity="center"
-        android:layout_marginTop="50dp"
-        android:background="@android:color/black"
-        android:text="Touch" />
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
 
+        <ImageView
+            android:id="@+id/iv_img"
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            android:src="@android:drawable/ic_menu_edit"/>
+        <Button
+            android:id="@+id/btn_test_dip2px"
+            android:layout_width="100dp"
+            android:layout_height="50dp"
+            android:text="测试dip2px"/>
+    </LinearLayout>
+
+
+    <Button
+        android:id="@+id/btn_test_crashlog"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="测试奔溃"
+        />
     <TextView
-        android:layout_below="@id/btn_touch"
-        android:layout_marginTop="@dimen/activity_horizontal_margin"
-        android:id="@+id/tv_log"
+        android:id="@+id/tv_show"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        />
-</RelativeLayout>
+        android:background="@android:color/black"
+        android:textColor="@android:color/white"/>
+</LinearLayout>

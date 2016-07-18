@@ -39,11 +39,9 @@ public class FileUtils {
 	 */
 	public static boolean isSDCardAvailable() {
 		if (Environment.MEDIA_MOUNTED.equals(Environment
-													 .getExternalStorageState()))
-		{
+				.getExternalStorageState())) {
 			return true;
-		} else
-		{
+		} else {
 			return false;
 		}
 	}
