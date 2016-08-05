@@ -113,7 +113,7 @@ public class FileUtils {
 	}
 
 	/**
-	 * 获取应用的cache目录
+	 * 获取应用的私有cache目录
 	 */
 	public static String getCachePath(Context context) {
 		File f = context.getCacheDir();

@@ -88,11 +88,11 @@ public class PrivDirOperateUtil {
         return newFile(DOWNLOAD_DIR,apkName+DOWNLOAD_APK_SUFFIX,context);
     }
 
-    public static void doLogW(String fileName,String str,Context context) {
+    public static void doLogW(String fileName,String message,Context context) {
         FileInputStream in = null;
         try {
             in = context.openFileInput(newLogFile(fileName,context));
-            in.read(str.getBytes());
+            in.read(message.getBytes());
         } catch (FileNotFoundException e) {
             e.printStackTrace();
         } catch (IOException e) {

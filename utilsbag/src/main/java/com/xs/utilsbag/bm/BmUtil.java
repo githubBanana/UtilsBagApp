@@ -21,7 +21,7 @@ import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 
 /**
- * @version V1.0 <描述当前版本功能>
+ * @version V1.0 <bitmap操作>
  * @author: Xs
  * @date: 2016-06-28 17:53
  * @email Xs.lin@foxmail.com

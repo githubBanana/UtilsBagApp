@@ -1,6 +1,8 @@
 package com.xs.utilsbagapp.activity;
 
 
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.os.Bundle;
 import android.os.Environment;
 import android.support.v7.app.AppCompatActivity;
@@ -11,9 +13,11 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.xs.utilsbag.file.PrivDirOperateUtil;
+import com.xs.utilsbag.bm.BmCutAndCompressUtil;
 import com.xs.utilsbag.phone.ScreenUtil;
 import com.xs.utilsbagapp.R;
+
+import java.io.File;
 
 public class TestActivity extends AppCompatActivity implements View.OnClickListener{
 
@@ -47,23 +51,33 @@ public class TestActivity extends AppCompatActivity implements View.OnClickListe
                  */
                 mTvShow.setText(String.valueOf(ScreenUtil.dip2px(mIvImg.getHeight())));
                 Log.e(TAG, "getExternalStorageDirectory: "+ Environment.getExternalStorageDirectory() );
-                PrivDirOperateUtil.doLogW("myname","dssdsd1234\n\n",this);
-
-
-/*
-                File file = new File(getCacheDir()+File.separator+"test.png");
-                FileInputStream in = null;
-                FileOutputStream out = null;
-                in = new FileInputStream(file);
-                out = new FileOutputStream()*/
-
+                Log.e(TAG, "onClick: "+Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_MOVIES) );
+//                PrivDirOperateUtil.doLogW("myname","dssdsd1234\n\n",this);
 
                 break;
             case R.id.btn_test_crashlog:
-                testException();
+//                testException();
+                String path = "/storage/emulated/0/DCIM/Camera/abc.jpg";
+                new BmCutAndCompressUtil().justDo(path, new BmCutAndCompressUtil.IBmCutCompressCallBack() {
+                    @Override
+                    public void onSuccess(File file) {
+                        Log.e(TAG, "onSuccess: "+file.getAbsolutePath() );
+                        Bitmap bitmap = BitmapFactory.decodeFile(file.getAbsolutePath());
+                        Log.e(TAG, "onSuccess w h : width:"+bitmap.getWidth()+" height:"+bitmap.getHeight() );
+                        Toast.makeText(TestActivity.this,file.getAbsolutePath(),Toast.LENGTH_SHORT).show();
+                        final ImageView mIv = (ImageView) findViewById(R.id.ivtest);
+                        mIv.setImageBitmap(bitmap);
+                    }
+
+                    @Override
+                    public void onFailed(Exception e) {
+                        e.printStackTrace();
+                    }
+                },this);
                 break;
         }
     }
+
 
     /**
      * 测试异常情况
@@ -79,6 +93,7 @@ public class TestActivity extends AppCompatActivity implements View.OnClickListe
         }
         a = 12;
         Log.e(TAG, "testException: "+a );
+        throw new IllegalArgumentException("llllllllllllllllll");
     }
 
 
