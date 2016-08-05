@@ -68,7 +68,7 @@ public class BmCutAndCompressUtil {
             /**
              * 裁剪部分
              */
-            final String cacheFileName = "upload_cache"+System.currentTimeMillis()+".png";
+            final String _outFilePath = FileUtils.getCacheDir(context) + "uploadPic" + System.currentTimeMillis() + ".png";
             boolean cut = false;
             final BitmapFactory.Options options = new BitmapFactory.Options();
             options.inJustDecodeBounds = true;
@@ -95,7 +95,7 @@ public class BmCutAndCompressUtil {
                 baos.reset();
                 src.compress(Bitmap.CompressFormat.JPEG, 70, baos);//30 0.039826393 70 0.07471275 90 0.15085125  99 0.46049404
                 Log.e(TAG, "压缩后大小 " + baos.toByteArray().length / (float) (1024 * 1024));
-                _outFile = new File(FileUtils.getCacheDir(context), cacheFileName);
+                _outFile = new File(_outFilePath);
                 FileOutputStream fileOutputStream = null;
                 try {
                     if (!_outFile.exists())
@@ -117,7 +117,7 @@ public class BmCutAndCompressUtil {
 
             } else {
                 if (cut) {//裁剪 + 无压缩
-                    _outFile = new File(FileUtils.getCacheDir(context), cacheFileName);
+                    _outFile = new File(_outFilePath);
                     FileOutputStream out = null;
                     try {
                         if (!_outFile.exists())
