@@ -4,3 +4,5 @@ Bitmap Scale
 ---------
 Screen
 ---------
+Version
+--------
