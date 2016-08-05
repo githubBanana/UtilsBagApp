@@ -9,7 +9,7 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 
 /**
- * @version V1.0 <程序访问自己私有目录工具>
+ * @version V1.0 <程序访问自己私有目录工具，改工具类未完善>
  * @author: Xs
  * @date: 2016-07-18 17:01
  * @email Xs.lin@foxmail.com
