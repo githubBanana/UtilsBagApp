@@ -2,9 +2,6 @@ package com.xs.utilsbag.exception;
 
 import android.app.Application;
 import android.content.Context;
-import android.text.TextUtils;
-import android.util.Log;
-import android.util.TimeUtils;
 
 import com.xs.utilsbag.R;
 import com.xs.utilsbag.file.FileUtils;
@@ -67,7 +64,7 @@ public class CrashHandler implements Thread.UncaughtExceptionHandler {
             return false;
 
         t.printStackTrace();
-        FileUtils.writeStringToFile(TimeUtil.getCurrFormatTime(),PhoneUtil.getMobileInfo(mContext)
+        FileUtils.writeStringToFile(TimeUtil.getCurrTime(),PhoneUtil.getMobileInfo(mContext)
                 +PhoneUtil.getVersionInfo(mContext)+getErrorInfo(t),mContext);
 
         System.exit(0);

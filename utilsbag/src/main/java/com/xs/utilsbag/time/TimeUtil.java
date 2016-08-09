@@ -2,7 +2,7 @@ package com.xs.utilsbag.time;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
-import java.util.TimeZone;
+import java.util.Locale;
 
 /**
  * @version V1.0 <描述当前版本功能>
@@ -13,22 +13,13 @@ import java.util.TimeZone;
 public class TimeUtil {
 
     /**
-     * 获取时间戳
-     * @return
-     */
-    public static long getCurrTime() {
-        return  (System.currentTimeMillis() / 1000);
-    }
-
-    /**
      * 获取当前详细时间 string格式
      * @return
      */
-    public static String getCurrFormatTime() {
+    public static String getCurrTime() {
         Date date = new Date(System.currentTimeMillis());
-        SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-        String currTime = format.format(date);
-        return currTime;
+        SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.CHINA);
+        return format.format(date);
     }
 
 }

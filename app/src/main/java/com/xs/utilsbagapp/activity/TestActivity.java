@@ -15,6 +15,7 @@ import android.widget.Toast;
 
 import com.xs.utilsbag.bm.BmCutAndCompressUtil;
 import com.xs.utilsbag.phone.ScreenUtil;
+import com.xs.utilsbag.time.UnixTimeStamp;
 import com.xs.utilsbagapp.R;
 
 import java.io.File;
@@ -27,6 +28,7 @@ public class TestActivity extends AppCompatActivity implements View.OnClickListe
     private Button          mBtnTestDip2px;
     private Button          mBtnTestCrashLog;
     private ImageView       mIvImg;
+    private Button          mBtnTimeStamp;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -36,9 +38,11 @@ public class TestActivity extends AppCompatActivity implements View.OnClickListe
         mIvImg = (ImageView) findViewById(R.id.iv_img);
         mBtnTestCrashLog = (Button) findViewById(R.id.btn_test_crashlog);
         mBtnTestDip2px = (Button) findViewById(R.id.btn_test_dip2px);
+        mBtnTimeStamp = (Button) findViewById(R.id.btn_timestamp);
 
         mBtnTestDip2px.setOnClickListener(this);
         mBtnTestCrashLog.setOnClickListener(this);
+        mBtnTimeStamp.setOnClickListener(this);
 
     }
 
@@ -57,7 +61,9 @@ public class TestActivity extends AppCompatActivity implements View.OnClickListe
                 break;
             case R.id.btn_test_crashlog:
 //                testException();
-                String path = "/storage/emulated/0/DCIM/Camera/abc.jpg";
+//                String path = "/storage/emulated/0/DCIM/Camera/abc.jpg";
+                String path = "/storage/emulated/0/DCIM/test.jpg";
+
                 new BmCutAndCompressUtil().justDo(path, new BmCutAndCompressUtil.IBmCutCompressCallBack() {
                     @Override
                     public void onSuccess(File file) {
@@ -75,7 +81,22 @@ public class TestActivity extends AppCompatActivity implements View.OnClickListe
                     }
                 },this);
                 break;
+
+            case R.id.btn_timestamp:
+                testTimeStamp();
+                break;
         }
+    }
+
+    /**
+     *  时间戳测试
+     */
+    private void testTimeStamp() {
+//        Log.e(TAG, "testTimeStamp: "+ TimeUtil.getCurrTime());
+//        Log.e(TAG, "testTimeStamp: "+ UnixTimeStamp.getCurrTime());
+
+        UnixTimeStamp.stampToNormal(UnixTimeStamp.getCurrTime());
+//        UnixTimeStamp.normalToStamp("2016-08-08 09:36:15");
     }
 
 
