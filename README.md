@@ -6,5 +6,5 @@ Screen
 ---------
 Version
 --------
-TimeStamp
+TimeStamp(未完善)
 --------
