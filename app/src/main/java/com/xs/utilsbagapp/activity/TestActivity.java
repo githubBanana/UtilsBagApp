@@ -83,7 +83,8 @@ public class TestActivity extends AppCompatActivity implements View.OnClickListe
                 break;
 
             case R.id.btn_timestamp:
-                testTimeStamp();
+//                testTimeStamp();
+                testException();
                 break;
         }
     }
@@ -106,15 +107,7 @@ public class TestActivity extends AppCompatActivity implements View.OnClickListe
     private void testException() {
         int a = 10;
         int b = 0;
-        try {
-            Toast.makeText(TestActivity.this,a / b,Toast.LENGTH_LONG).show();
-        }catch (Exception e) {
-            e.printStackTrace();
-            a = 11;
-        }
-        a = 12;
-        Log.e(TAG, "testException: "+a );
-        throw new IllegalArgumentException("llllllllllllllllll");
+        Toast.makeText(TestActivity.this,a / b,Toast.LENGTH_LONG).show();
     }
 
 

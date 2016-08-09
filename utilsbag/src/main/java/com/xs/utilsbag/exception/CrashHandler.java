@@ -2,6 +2,7 @@ package com.xs.utilsbag.exception;
 
 import android.app.Application;
 import android.content.Context;
+import android.util.Log;
 
 import com.xs.utilsbag.R;
 import com.xs.utilsbag.file.FileUtils;
@@ -63,10 +64,13 @@ public class CrashHandler implements Thread.UncaughtExceptionHandler {
         if (t == null)
             return false;
 
-        t.printStackTrace();
-        FileUtils.writeStringToFile(TimeUtil.getCurrTime(),PhoneUtil.getMobileInfo(mContext)
-                +PhoneUtil.getVersionInfo(mContext)+getErrorInfo(t),mContext);
-
+//        t.printStackTrace();
+        StringBuilder errorBuilder = new StringBuilder();
+        errorBuilder.append(PhoneUtil.getMobileInfo(mContext))
+                .append(PhoneUtil.getVersionInfo(mContext))
+                .append(getErrorInfo(t));
+        Log.e("CrashHandler", "handlerException: "+errorBuilder.toString() );
+        FileUtils.writeStringToFile(TimeUtil.getCurrTime(),errorBuilder.toString(),mContext);
         System.exit(0);
         return true;
     }
