@@ -3,7 +3,6 @@ package com.xs.utilsbag.phone;
 import android.content.res.Resources;
 import android.graphics.Rect;
 import android.util.DisplayMetrics;
-import android.util.Log;
 
 /**
  * @version V1.0 <手机屏幕信息获取工具类>
@@ -19,11 +18,15 @@ public class ScreenUtil {
      * @return
      */
     public static int px2dip(int pxValue) {
+        // 公式 1: px = dp * (dpi / 160)
+        // 公式 2: dp = px / denistity;
         final float scale = Resources.getSystem().getDisplayMetrics().density;
         return (int) (pxValue / scale + 0.5f);
     }
 
     public static float dip2px(float dipValue) {
+        // 公式 1: px = dp * (dpi / 160)
+        // 公式 2: dp = px / denistity;
         final float scale = Resources.getSystem().getDisplayMetrics().density;
         return  (dipValue * scale + 0.5f);
     }
