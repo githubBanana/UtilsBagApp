@@ -13,7 +13,10 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.bumptech.glide.Glide;
+import com.xs.utilsbag.app.CacheManager;
 import com.xs.utilsbag.bm.BmCutAndCompressUtil;
+import com.xs.utilsbag.file.FileUtils;
 import com.xs.utilsbag.phone.ScreenUtil;
 import com.xs.utilsbag.time.UnixTimeStamp;
 import com.xs.utilsbagapp.R;
@@ -25,6 +28,8 @@ public class TestActivity extends AppCompatActivity implements View.OnClickListe
     private final String TAG = TestActivity.class.getSimpleName();
 
     private TextView        mTvShow;
+    private TextView        mTvLogShow;
+    private Button          mBtnCacheSize,mBtnClearCache;
     private Button          mBtnTestDip2px;
     private Button          mBtnTestCrashLog;
     private ImageView       mIvImg;
@@ -35,6 +40,9 @@ public class TestActivity extends AppCompatActivity implements View.OnClickListe
         setContentView(R.layout.activity_test);
 
         mTvShow = (TextView) findViewById(R.id.tv_show);
+        mTvLogShow = (TextView) findViewById(R.id.tv_logshow);
+        mBtnCacheSize = (Button) findViewById(R.id.btn_cachesize);
+        mBtnClearCache = (Button) findViewById(R.id.btn_clearcache);
         mIvImg = (ImageView) findViewById(R.id.iv_img);
         mBtnTestCrashLog = (Button) findViewById(R.id.btn_test_crashlog);
         mBtnTestDip2px = (Button) findViewById(R.id.btn_test_dip2px);
@@ -43,7 +51,11 @@ public class TestActivity extends AppCompatActivity implements View.OnClickListe
         mBtnTestDip2px.setOnClickListener(this);
         mBtnTestCrashLog.setOnClickListener(this);
         mBtnTimeStamp.setOnClickListener(this);
+        mBtnCacheSize.setOnClickListener(this);
+        mBtnClearCache.setOnClickListener(this);
 
+        Glide.with(mIvImg.getContext()).load("http://upfiles.b0.upaiyun.com/support/third/tupianchuli/helpex1.jpg").asBitmap().centerCrop().placeholder(android.R.drawable.ic_menu_edit)
+                .override(300,300).into(mIvImg);
     }
 
     @Override
@@ -83,8 +95,14 @@ public class TestActivity extends AppCompatActivity implements View.OnClickListe
                 break;
 
             case R.id.btn_timestamp:
-//                testTimeStamp();
-                testException();
+                testTimeStamp();
+//                testException();
+                break;
+            case R.id.btn_cachesize:
+                testCacheManager_getCacheSize();
+                break;
+            case R.id.btn_clearcache:
+                testCacheManager_clearCache();
                 break;
         }
     }
@@ -108,6 +126,44 @@ public class TestActivity extends AppCompatActivity implements View.OnClickListe
         int a = 10;
         int b = 0;
         Toast.makeText(TestActivity.this,a / b,Toast.LENGTH_LONG).show();
+    }
+
+    /**
+     * 测试计算缓存大小
+     */
+
+    private void testCacheManager_getCacheSize() {
+        String[] caches = new String[]{FileUtils.getLogDir(this),FileUtils.getCacheDir(this),getCacheDir().getAbsolutePath()};
+        Log.e(TAG, "testCacheManager_getCacheSize: "+getCacheDir().getAbsolutePath() );
+/*        Log.e(TAG, "testCacheManager: "+Environment.getExternalStorageDirectory().getAbsolutePath() );
+        Log.e(TAG, "getExternalStoragePath: "+FileUtils.getExternalStoragePath(this) );
+        Log.e(TAG, "getCachePath: "+FileUtils.getPrivaCachePath(this) );
+        Log.e(TAG, "getCacheDir: "+FileUtils.getCacheDir(this) );
+        Log.e(TAG, "getIconDir: "+FileUtils.getIconDir(this) );
+        Log.e(TAG, "getLogDir: "+FileUtils.getLogDir(this) );
+        Log.e(TAG, "getDownloadDir: "+FileUtils.getDownloadDir(this) );*/
+
+        new CacheManager().justCheckSize(caches, new CacheManager.OnListenCacheManager() {
+            @Override
+            public void onSuccess(String size) {
+                mTvLogShow.setText(size);
+            }
+        });
+    }
+
+    /**
+     * 测试清除缓存
+     */
+    private void testCacheManager_clearCache() {
+        String[] caches = new String[]{FileUtils.getLogDir(this),FileUtils.getCacheDir(this),getCacheDir().getAbsolutePath()};
+
+        new CacheManager().justClear(caches, new CacheManager.OnListenClearCache() {
+            @Override
+            public void onSuccess() {
+            }
+        });
+
+
     }
 
 

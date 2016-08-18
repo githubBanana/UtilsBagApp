@@ -1,4 +1,4 @@
-package com.xs.utilsbag.basic;
+package com.xs.utilsbag.general;
 
 import android.content.Context;
 import android.support.annotation.ColorInt;

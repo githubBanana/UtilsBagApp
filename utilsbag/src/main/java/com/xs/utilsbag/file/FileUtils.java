@@ -3,7 +3,7 @@ package com.xs.utilsbag.file;
 import android.content.Context;
 import android.os.Environment;
 
-import com.xs.utilsbag.basic.StringUtils;
+import com.xs.utilsbag.general.StringUtils;
 
 import java.io.ByteArrayOutputStream;
 import java.io.File;
@@ -85,7 +85,7 @@ public class FileUtils {
 			sb.append(getExternalStoragePath(context));
 		} else
 		{
-			sb.append(getCachePath(context));
+			sb.append(getPrivaCachePath(context));
 		}
 		sb.append(name);
 		sb.append(File.separator);
@@ -115,7 +115,7 @@ public class FileUtils {
 	/**
 	 * 获取应用的私有cache目录
 	 */
-	public static String getCachePath(Context context) {
+	public static String getPrivaCachePath(Context context) {
 		File f = context.getCacheDir();
 		if (null == f)
 		{

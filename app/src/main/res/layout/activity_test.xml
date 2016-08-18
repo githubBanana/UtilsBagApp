@@ -57,5 +57,23 @@
         android:layout_gravity="center_horizontal"
         android:gravity="center_horizontal"
         android:text="时间戳工具测试"/>
+    <Button
+        android:id="@+id/btn_cachesize"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal"
+        android:gravity="center_horizontal"
+        android:text="计算缓存大小"/>
+    <Button
+        android:id="@+id/btn_clearcache"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal"
+        android:gravity="center_horizontal"
+        android:text="清除缓存"/>
+    <TextView
+        android:id="@+id/tv_logshow"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" />
 </LinearLayout>
 </ScrollView>

@@ -8,3 +8,6 @@ Version
 --------
 TimeStamp(未完善)
 --------
+CacheClearManager
+--------------
+
