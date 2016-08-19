@@ -8,6 +8,9 @@ Version
 --------
 TimeStamp(未完善)
 --------
-CacheClearManager
+CacheManager
 --------------
+ThirdPartyUtil
+--------------
+##ImageLoader
 

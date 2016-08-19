@@ -180,7 +180,7 @@ public class CacheManager {
             try {
                 if (file.isDirectory()) {// 目录
                     if (file.listFiles().length == 0) {//目录为空
-//                        file.delete();
+                        file.delete();
                     } else {
                         File filess[] = file.listFiles();
                         deleteFolderFile(filess);
