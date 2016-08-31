@@ -27,6 +27,7 @@ public class BmCutAndCompressUtil {
     private int     _cutInSampleSize     = 4;   //裁剪1/x         4
     private int     _cutLimit            = 2000;//裁剪临界值      2000
     private float   _compressLimitMb     = 3f;  //压缩放临界值    3f
+    private int     _compressLimitKb     = 200; //压缩放临界值    200kb
     private File    _outFile             = null;//输出文件
     private Context context;
 
@@ -90,11 +91,19 @@ public class BmCutAndCompressUtil {
              */
             ByteArrayOutputStream baos = new ByteArrayOutputStream();
             src.compress(Bitmap.CompressFormat.JPEG, 100, baos);// 质量压缩方法，这里100表示不压缩，把压缩后的数据存放到baos中
-            if (baos.toByteArray().length / (float) 1024 > (_compressLimitMb * 1024)) {
-                Log.e(TAG, "压缩前大小 " + baos.toByteArray().length / (float) (1024 * 1024));
-                baos.reset();
-                src.compress(Bitmap.CompressFormat.JPEG, 70, baos);//30 0.039826393 70 0.07471275 90 0.15085125  99 0.46049404
-                Log.e(TAG, "压缩后大小 " + baos.toByteArray().length / (float) (1024 * 1024));
+            if (baos.toByteArray().length / (float) 1024 > _compressLimitKb) {//_compressLimitMb * 1024
+                Log.e(TAG, "压缩前大小 " + baos.toByteArray().length / (float) (1024) + "kb");
+                int option = 100;
+                while (baos.toByteArray().length / (float)1024 > _compressLimitKb) {
+                    baos.reset();
+                    src.compress(Bitmap.CompressFormat.JPEG, option, baos);
+                    if (option <= 0 )
+                        break;
+                    option -= 10;// 每次都减少10
+                    option = option <= 0 ? 0 : option;
+                    Log.e(TAG, "压缩中 " + baos.toByteArray().length / (float) (1024) +" kb");
+                }
+                Log.e(TAG, "压缩后大小 " + baos.toByteArray().length / (float) (1024) +" kb");
                 _outFile = new File(_outFilePath);
                 FileOutputStream fileOutputStream = null;
                 try {
@@ -112,7 +121,7 @@ public class BmCutAndCompressUtil {
                     e.printStackTrace();
                     return e;
                 }
-                Log.e(TAG, "裁剪+压缩后大小: " + (_outFile.length() / (float) (1024 * 1024)));
+                Log.e(TAG, "裁剪+压缩后大小: " + (_outFile.length() / (float) (1024)+"kb"));
                 return null;
 
             } else {

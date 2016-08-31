@@ -74,7 +74,7 @@ public class TestActivity extends AppCompatActivity implements View.OnClickListe
             case R.id.btn_test_crashlog:
 //                testException();
 //                String path = "/storage/emulated/0/DCIM/Camera/abc.jpg";
-                String path = "/storage/emulated/0/DCIM/test.jpg";
+                String path = "/storage/emulated/0/DCIM/Camera/abc.jpg";
 
                 new BmCutAndCompressUtil().justDo(path, new BmCutAndCompressUtil.IBmCutCompressCallBack() {
                     @Override
