@@ -16,7 +16,9 @@ import android.widget.Toast;
 import com.bumptech.glide.Glide;
 import com.xs.utilsbag.app.CacheManager;
 import com.xs.utilsbag.bm.BmCutAndCompressUtil;
+import com.xs.utilsbag.encry.DESUtil;
 import com.xs.utilsbag.file.FileUtils;
+import com.xs.utilsbag.general.SPUtil;
 import com.xs.utilsbag.phone.ScreenUtil;
 import com.xs.utilsbag.time.UnixTimeStamp;
 import com.xs.utilsbagapp.R;
@@ -34,6 +36,7 @@ public class TestActivity extends AppCompatActivity implements View.OnClickListe
     private Button          mBtnTestCrashLog;
     private ImageView       mIvImg;
     private Button          mBtnTimeStamp;
+    private Button          mBtnSPUtil;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -47,12 +50,14 @@ public class TestActivity extends AppCompatActivity implements View.OnClickListe
         mBtnTestCrashLog = (Button) findViewById(R.id.btn_test_crashlog);
         mBtnTestDip2px = (Button) findViewById(R.id.btn_test_dip2px);
         mBtnTimeStamp = (Button) findViewById(R.id.btn_timestamp);
+        mBtnSPUtil = (Button) findViewById(R.id.btn_sputils);
 
         mBtnTestDip2px.setOnClickListener(this);
         mBtnTestCrashLog.setOnClickListener(this);
         mBtnTimeStamp.setOnClickListener(this);
         mBtnCacheSize.setOnClickListener(this);
         mBtnClearCache.setOnClickListener(this);
+        mBtnSPUtil.setOnClickListener(this);
 
         Glide.with(mIvImg.getContext()).load("http://upfiles.b0.upaiyun.com/support/third/tupianchuli/helpex1.jpg").asBitmap().centerCrop().placeholder(android.R.drawable.ic_menu_edit)
                 .override(300,300).into(mIvImg);
@@ -103,6 +108,13 @@ public class TestActivity extends AppCompatActivity implements View.OnClickListe
                 break;
             case R.id.btn_clearcache:
                 testCacheManager_clearCache();
+                break;
+            case R.id.btn_sputils:
+                SPUtil.saveNormalData(this,"username", DESUtil.encryptAsDoNet("linxiaoshenglinxiaoxiayuping"));
+                SPUtil.saveNormalData(this,"password",DESUtil.encryptAsDoNet("ABCabc966500"));
+                Log.e(TAG, "onClick: "+DESUtil.decryptDoNet(SPUtil.readNormalData(this,"username"))+"\n"+
+                DESUtil.decryptDoNet(SPUtil.readNormalData(this,"password"))+"\n"+
+                DESUtil.decryptDoNet(SPUtil.readNormalData(this,"tttt")));
                 break;
         }
     }

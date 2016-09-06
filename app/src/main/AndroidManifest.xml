@@ -9,7 +9,7 @@
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
         android:supportsRtl="true"
-        android:name=".UtilsApplication"
+        android:name="com.xs.utilsbag.UtilsBagApplication"
         android:theme="@style/AppTheme">
         <activity android:name=".activity.TestActivity">
             <intent-filter>
