@@ -64,7 +64,7 @@ public class CrashHandler implements Thread.UncaughtExceptionHandler {
         if (t == null)
             return false;
 
-//        t.printStackTrace();
+        t.printStackTrace();
         StringBuilder errorBuilder = new StringBuilder();
         errorBuilder.append(PhoneUtil.getMobileInfo(mContext))
                 .append(PhoneUtil.getVersionInfo(mContext))
