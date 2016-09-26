@@ -17,6 +17,8 @@ import com.bumptech.glide.Glide;
 import com.xs.utilsbag.app.CacheManager;
 import com.xs.utilsbag.bm.BmCutAndCompressUtil;
 import com.xs.utilsbag.encry.DESUtil;
+import com.xs.utilsbag.encry.MD5Util;
+import com.xs.utilsbag.encry.tt;
 import com.xs.utilsbag.file.FileSeparate;
 import com.xs.utilsbag.file.FileUtils;
 import com.xs.utilsbag.general.SPUtil;
@@ -28,6 +30,8 @@ import junit.framework.Test;
 
 import java.io.File;
 import java.io.IOException;
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -47,6 +51,11 @@ public class TestActivity extends AppCompatActivity implements View.OnClickListe
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_test);
+
+        String message = MD5Util.digest("linxiaohsengli林晓胜");
+        Log.e(TAG, "message: "+message );
+        Log.e(TAG, "message tt: "+ tt.md5("linxiaohsengli林晓胜") );
+
 
         mTvShow = (TextView) findViewById(R.id.tv_show);
         mTvLogShow = (TextView) findViewById(R.id.tv_logshow);
@@ -131,7 +140,7 @@ public class TestActivity extends AppCompatActivity implements View.OnClickListe
                 } catch (Exception e) {
                     e.printStackTrace();
                 }*/
-                ArrayList<String> mList = new ArrayList<>();
+            /*    ArrayList<String> mList = new ArrayList<>();
                 for (int i = 1; i < 33; i++) {
                     String str = FileUtils.getCacheDir(this)+i+".mp4";
                     mList.add(str);
@@ -140,7 +149,8 @@ public class TestActivity extends AppCompatActivity implements View.OnClickListe
                     FileSeparate.mergeApkFile(this,mList,FileUtils.getCacheDir(this)+"baby.mp4");
                 } catch (IOException e) {
                     e.printStackTrace();
-                }
+                }*/
+                Log.e(TAG, "文件md5加密: "+tt.getFileMD5(FileUtils.getCacheDir(this)+"baby.mp4") );
                 break;
         }
     }
