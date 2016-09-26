@@ -17,13 +17,19 @@ import com.bumptech.glide.Glide;
 import com.xs.utilsbag.app.CacheManager;
 import com.xs.utilsbag.bm.BmCutAndCompressUtil;
 import com.xs.utilsbag.encry.DESUtil;
+import com.xs.utilsbag.file.FileSeparate;
 import com.xs.utilsbag.file.FileUtils;
 import com.xs.utilsbag.general.SPUtil;
 import com.xs.utilsbag.phone.ScreenUtil;
 import com.xs.utilsbag.time.UnixTimeStamp;
 import com.xs.utilsbagapp.R;
 
+import junit.framework.Test;
+
 import java.io.File;
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 
 public class TestActivity extends AppCompatActivity implements View.OnClickListener{
 
@@ -51,6 +57,7 @@ public class TestActivity extends AppCompatActivity implements View.OnClickListe
         mBtnTestDip2px = (Button) findViewById(R.id.btn_test_dip2px);
         mBtnTimeStamp = (Button) findViewById(R.id.btn_timestamp);
         mBtnSPUtil = (Button) findViewById(R.id.btn_sputils);
+        findViewById(R.id.btn_separate).setOnClickListener(this);
 
         mBtnTestDip2px.setOnClickListener(this);
         mBtnTestCrashLog.setOnClickListener(this);
@@ -61,6 +68,8 @@ public class TestActivity extends AppCompatActivity implements View.OnClickListe
 
         Glide.with(mIvImg.getContext()).load("http://upfiles.b0.upaiyun.com/support/third/tupianchuli/helpex1.jpg").asBitmap().centerCrop().placeholder(android.R.drawable.ic_menu_edit)
                 .override(300,300).into(mIvImg);
+
+        Log.e(TAG, "onCreate: "+FileUtils.getCacheDir(this) );
     }
 
     @Override
@@ -115,6 +124,23 @@ public class TestActivity extends AppCompatActivity implements View.OnClickListe
                 Log.e(TAG, "onClick: "+DESUtil.decryptDoNet(SPUtil.readNormalData(this,"username"))+"\n"+
                 DESUtil.decryptDoNet(SPUtil.readNormalData(this,"password"))+"\n"+
                 DESUtil.decryptDoNet(SPUtil.readNormalData(this,"tttt")));
+                break;
+            case R.id.btn_separate:
+            /*    try {
+                    FileSeparate.Separate(this);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }*/
+                ArrayList<String> mList = new ArrayList<>();
+                for (int i = 1; i < 33; i++) {
+                    String str = FileUtils.getCacheDir(this)+i+".mp4";
+                    mList.add(str);
+                }
+                try {
+                    FileSeparate.mergeApkFile(this,mList,FileUtils.getCacheDir(this)+"baby.mp4");
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
                 break;
         }
     }

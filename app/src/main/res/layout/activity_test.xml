@@ -80,5 +80,10 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="SPUtils"/>
+    <Button
+        android:id="@+id/btn_separate"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="文件分割"/>
 </LinearLayout>
 </ScrollView>
